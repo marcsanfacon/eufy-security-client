@@ -1070,7 +1070,6 @@ export class Device extends TypedEmitter<DeviceEvents> {
             type == DeviceType.LOCK_85A3 ||
             type == DeviceType.LOCK_8506 ||
             type == DeviceType.LOCK_8502 ||
-            type == DeviceType.LOCK_8501 ||
             type == DeviceType.SMART_SAFE_7400 ||
             type == DeviceType.SMART_SAFE_7401 ||
             type == DeviceType.SMART_SAFE_7402 ||
