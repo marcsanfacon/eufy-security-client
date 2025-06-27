@@ -12,7 +12,7 @@ import * as schedule from "node-schedule";
 
 import { ResultResponse, LoginResultResponse, TrustDevice, Cipher, Voice, EventRecordResponse, Invite, ConfirmInvite, SensorHistoryEntry, ApiResponse, CaptchaResponse, LoginRequest, HouseDetail, DeviceListResponse, StationListResponse, HouseInviteListResponse, HouseListResponse, PassportProfileResponse, UsersResponse, User, AddUserResponse } from "./models"
 import { HTTPApiEvents, Ciphers, FullDevices, Hubs, Voices, Invites, HTTPApiRequest, HTTPApiPersistentData, Houses, LoginOptions, Schedule } from "./interfaces";
-import { EventFilterType, PublicKeyType, ResponseErrorCode, StorageType, UserPasswordType, VerfyCodeTypes } from "./types";
+import { EventFilterType, PublicKeyType, ResponseErrorCode, StorageType, UserPasswordType, VerfyCodeTypes, DeviceType } from "./types";
 import { ParameterHelper } from "./parameter";
 import { encryptAPIData, decryptAPIData, getTimezoneGMTString, decodeImage, hexDate, hexTime, hexWeek } from "./utils";
 import { InvalidCountryCodeError, InvalidLanguageCodeError, ensureError } from "./../error";
@@ -571,6 +571,12 @@ export class HTTPApi extends TypedEmitter<HTTPApiEvents> {
                     if (result.code == 0) {
                         if (result.data) {
                             const deviceList = this.decryptAPIData(result.data) as Array<DeviceListResponse>;
+                            // TEST OVERRIDE: Treat T8501 as T8502
+                            deviceList.forEach(device => {
+                                if (device.device_model === "T8501") {
+                                    device.device_type = DeviceType.LOCK_8502;
+                                }
+                            });
                             rootHTTPLogger.debug("Decrypted device list data", deviceList);
                             return deviceList;
                         }
